@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="PT-BR">
+
+<head>
+    <title>Chat</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js"></script>
+
+
+
+    <meta name="description" content="WebRTC code samples">
+    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
+    <meta itemprop="description" content="Client-side WebRTC code samples">
+    <meta itemprop="name" content="WebRTC code samples">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta id="theme-color" name="theme-color" content="#ffffff">
+
+    <base target="_blank">
+
+    <link rel="stylesheet" href="../../../css/main.css">
+</head>
+
+<body>
+    <div class="container-fluid h-100">
+        <div class="col-md-8 col-xl-6 chat">
+            <div class="card">
+                <div class="card-header msg_head">
+                    <div class="d-flex bd-highlight">
+                        <div class="user_info">
+                            <span>Chat</span>
+                        </div>
+                        <div class="video_cam">
+                            <button id="showVideo" class="fas fa-video"></button>
+
+                            <button onclick="getLocation()" class="fas fa-map-marker"></button>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body msg_card_body">
+                    <div id="bodyChat"></div>
+                    <div id="video" style="display: none">
+                        <div class="d-flex justify-content-end mb-4">
+                            <div class="msg_cotainer_send">
+
+                                <div id="container">
+                                    <video id="gum-local" autoplay playsinline height="200px" width="200"></video>
+
+
+                                    <div id="errorMsg"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="localizacao" style="display: none">
+                        <div class="d-flex justify-content-end mb-4">
+                            <div class="msg_cotainer_send">
+                                <p id="demo">Localização Atual:</p>
+                                <div id="mapholder"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="input-group">
+                        <textarea name="" id="mensagemBox" class="form-control type_msg" placeholder="Escreva sua mensagem aqui..."></textarea>
+                        <div class="input-group-append">
+                            <span class="input-group-text send_btn" id="btnEnviar">Enviar</i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script src="js/main.js"></script>
+    <script type="text/javascript" src="js/script.js"></script>
+
+    <script src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <script>
+        var x = document.getElementById("demo");
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                $("#localizacao").show();
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                x.innerHTML = "Geolocalização não é suportada nesse browser.";
+            }
+        }
+
+        function showPosition(position) {
+            lat = position.coords.latitude;
+            lon = position.coords.longitude;
+            latlon = new google.maps.LatLng(lat, lon)
+            mapholder = document.getElementById('mapholder')
+            mapholder.style.height = '250px';
+            mapholder.style.width = '500px';
+
+            var myOptions = {
+                center: latlon,
+                zoom: 14,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                mapTypeControl: false,
+                navigationControlOptions: {
+                    style: google.maps.NavigationControlStyle.SMALL
+                }
+            };
+            var map = new google.maps.Map(document.getElementById("mapholder"), myOptions);
+            var marker = new google.maps.Marker({
+                position: latlon,
+                map: map,
+                title: "Você está Aqui!"
+            });
+        }
+
+        function showError(error) {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    x.innerHTML = "Usuário rejeitou a solicitação de Geolocalização."
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    x.innerHTML = "Localização indisponível."
+                    break;
+                case error.TIMEOUT:
+                    x.innerHTML = "O tempo da requisição expirou."
+                    break;
+                case error.UNKNOWN_ERROR:
+                    x.innerHTML = "Algum erro desconhecido aconteceu."
+                    break;
+            }
+        }
+    </script>
+    <!-- 
+    <script src="../../../js/lib/ga.js"></script> -->
+</body>
+
+</html>
